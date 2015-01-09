@@ -1,0 +1,152 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+
+framework:
+    #esi:             ~
+    translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_proxies: ~
+    session:
+        handler_id:  ~
+        cookie_lifetime: 7776000
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+
+# Assetic Configuration
+assetic:
+    debug:          "%kernel.debug%"
+    use_controller: false
+    bundles:        [AppBundle]
+    filters:
+        cssrewrite: ~
+        less:
+            node: %assetic_less_node%
+            node_paths: %assetic_less_node_paths%
+            apply_to: "\.less$"
+        cssembed:
+            jar: %kernel.root_dir%/Resources/java/cssembed-0.3.6.jar
+            apply_to: "\.css$|\.less$"
+        yui_css:
+            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
+            apply_to: "\.css$"
+        yui_js:
+            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
+    assets:
+        jquery_js:
+            inputs:
+                - %kernel.root_dir%/../vendor/yiisoft/jquery/jquery.min.js
+        bootstrap_js:
+            inputs:
+                - @MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js
+                - @MopaBootstrapBundle/Resources/public/bootstrap/js/*.js
+                - @MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js
+                - @MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js
+        bootstrap_less:
+            inputs:
+                - @MopaBootstrapBundle/Resources/public/less/mopabootstrapbundle.less
+        bootstrap_datepicker_js:
+            inputs:
+                - %kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/js/bootstrap-datepicker.js
+                - %kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/js/locales/bootstrap-datepicker.ja.js
+                - %kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js
+        bootstrap_datepicker_css:
+            inputs:
+                - %kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/css/datepicker3.css
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
+        charset:  UTF8
+        mapping_types:
+            enum: string
+        types:
+          RoleType: AppBundle\DBAL\Types\RoleType
+
+    orm:
+        auto_generate_proxy_classes: "%kernel.debug%"
+        entity_managers:
+          default:
+            auto_mapping: true
+            filters:
+              softdeleteable:
+                  class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                  enabled: true
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:
+            type: file
+            path: %kernel.root_dir%/emails
+
+knp_menu:
+    templating: false # if true, enables the helper for PHP templates
+    default_renderer: twig # The renderer to use, list is also available by default
+    providers:
+        builder_alias:   false  # disable the builder-based provider
+        container_aware: true   # keep this one enabled. Can be omitted as it is the default
+#    twig:
+#        template: ::navbar.html.twig
+
+# FOSUserBundle Configuration
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: AppBundle\Entity\User
+    from_email:
+        address:        %mailer_user%
+        sender_name:    app
+    service:
+        user_manager: app.user_manager
+        mailer: fos_user.mailer.twig_swift
+
+stof_doctrine_extensions:
+    orm:
+        default:
+            timestampable: true
+            softdeleteable: true
+
+mopa_bootstrap:
+    menu: ~
+    form:
+        render_required_asterisk: true
+        render_optional_text: false
+        collection:
+            widget_remove_btn:
+                icon: trash
+                label: button.remove
+genemu_form:
+    select2: ~
+
+kitpages_data_grid:
+    paginator:
+        item_count_in_page: 25
+        visible_page_count_in_paginator: 5
+
+vich_uploader:
+    db_driver: orm

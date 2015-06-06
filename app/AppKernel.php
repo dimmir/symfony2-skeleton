@@ -17,29 +17,13 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
-
-            new FOS\UserBundle\FOSUserBundle(),
-            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
-            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
-            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
-            new Fresh\Bundle\DoctrineEnumBundle\FreshDoctrineEnumBundle(),
-            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
-            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
-            new Khepin\YamlFixturesBundle\KhepinYamlFixturesBundle(),
-            new JMS\AopBundle\JMSAopBundle(),
-            new Kitpages\DataGridBundle\KitpagesDataGridBundle(),
-            new Genemu\Bundle\FormBundle\GenemuFormBundle(),
-            new Vich\UploaderBundle\VichUploaderBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
-            $bundles[] = new Acme\DemoBundle\AcmeDemoBundle();
+            $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
-            $bundles[] = new Elao\WebProfilerExtraBundle\WebProfilerExtraBundle();
         }
 
         return $bundles;
@@ -47,6 +31,6 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
+        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
     }
 }

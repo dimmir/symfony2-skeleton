@@ -1,40 +1,12 @@
-# Cache and logs
+/web/bundles/
+/app/bootstrap.php.cache
 /app/cache/*
-!app/cache/.gitkeep
-/app/logs/*
-!app/logs/.gitkeep
-/app/emails/*
-!app/emails/.gitkeep
-
-# Parameters
 /app/config/parameters.yml
-/app/config/parameters_local.yml
-/app/config/parameters.ini
-
-# Managed by Composer
-/app/bootstrap*
-/bin/*
-/vendor/*
-
-# Assets and user uploads
-/web/assetic/
-!web/assetic/.gitkeep
-/web/bundles/*
-!web/bundles/.gitkeep
-/web/uploads/*
-!web/uploads/.gitkeep
-/web/css/compiled/*
-!web/css/compiled/.gitkeep
-/web/js/compiled/*
-!web/js/compiled/.gitkeep
-/components
-
-# PHPUnit
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
 /app/phpunit.xml
-
-# Composer PHAR
+/build/
+/vendor/
+/bin/
 /composer.phar
-/composer.lock
-
-# IDE
-.idea/*

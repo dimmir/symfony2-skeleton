@@ -1,10 +1,16 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: services.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: en
 
 framework:
     #esi:             ~
-    translator:      { fallback: "%locale%" }
+    #translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -12,14 +18,16 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
+    #serializer:      { enable_annotations: true }
     templating:
         engines: ['twig']
         #assets_version: SomeVersionScheme
     default_locale:  "%locale%"
+    trusted_hosts:   ~
     trusted_proxies: ~
     session:
+        # handler_id set to null will use default session handler from php.ini
         handler_id:  ~
-        cookie_lifetime: 7776000
     fragments:       ~
     http_method_override: true
 
@@ -32,67 +40,36 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [AppBundle]
+    bundles:        [ ]
+    #java: /usr/bin/java
     filters:
         cssrewrite: ~
-        less:
-            node: %assetic_less_node%
-            node_paths: %assetic_less_node_paths%
-            apply_to: "\.less$"
-        cssembed:
-            jar: %kernel.root_dir%/Resources/java/cssembed-0.3.6.jar
-            apply_to: "\.css$|\.less$"
-        yui_css:
-            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
-            apply_to: "\.css$"
-        yui_js:
-            jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
-    assets:
-        jquery_js:
-            inputs:
-                - %kernel.root_dir%/../vendor/yiisoft/jquery/jquery.min.js
-        bootstrap_js:
-            inputs:
-                - @MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js
-                - @MopaBootstrapBundle/Resources/public/bootstrap/js/*.js
-                - @MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js
-                - @MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js
-        bootstrap_less:
-            inputs:
-                - @MopaBootstrapBundle/Resources/public/less/mopabootstrapbundle.less
-        bootstrap_datepicker_js:
-            inputs:
-                - %kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/js/bootstrap-datepicker.js
-                - %kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/js/locales/bootstrap-datepicker.ja.js
-                - %kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js
-        bootstrap_datepicker_css:
-            inputs:
-                - %kernel.root_dir%/../vendor/eternicode/bootstrap-datepicker/css/datepicker3.css
+        #closure:
+        #    jar: "%kernel.root_dir%/Resources/java/compiler.jar"
+        #yui_css:
+        #    jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar"
 
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   "%database_driver%"
+        driver:   pdo_mysql
         host:     "%database_host%"
         port:     "%database_port%"
         dbname:   "%database_name%"
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
-        mapping_types:
-            enum: string
-        types:
-          RoleType: AppBundle\DBAL\Types\RoleType
+        # if using pdo_sqlite as your database driver:
+        #   1. add the path in parameters.yml
+        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        #   2. Uncomment database_path in parameters.yml.dist
+        #   3. Uncomment next line:
+        #     path:     "%database_path%"
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
-        entity_managers:
-          default:
-            auto_mapping: true
-            filters:
-              softdeleteable:
-                  class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
-                  enabled: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -100,53 +77,4 @@ swiftmailer:
     host:      "%mailer_host%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
-    spool:
-            type: file
-            path: %kernel.root_dir%/emails
-
-knp_menu:
-    templating: false # if true, enables the helper for PHP templates
-    default_renderer: twig # The renderer to use, list is also available by default
-    providers:
-        builder_alias:   false  # disable the builder-based provider
-        container_aware: true   # keep this one enabled. Can be omitted as it is the default
-#    twig:
-#        template: ::navbar.html.twig
-
-# FOSUserBundle Configuration
-fos_user:
-    db_driver: orm
-    firewall_name: main
-    user_class: AppBundle\Entity\User
-    from_email:
-        address:        %mailer_user%
-        sender_name:    app
-    service:
-        user_manager: app.user_manager
-        mailer: fos_user.mailer.twig_swift
-
-stof_doctrine_extensions:
-    orm:
-        default:
-            timestampable: true
-            softdeleteable: true
-
-mopa_bootstrap:
-    menu: ~
-    form:
-        render_required_asterisk: true
-        render_optional_text: false
-        collection:
-            widget_remove_btn:
-                icon: trash
-                label: button.remove
-genemu_form:
-    select2: ~
-
-kitpages_data_grid:
-    paginator:
-        item_count_in_page: 25
-        visible_page_count_in_paginator: 5
-
-vich_uploader:
-    db_driver: orm
+    spool:     { type: memory }
